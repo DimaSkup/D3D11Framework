@@ -5,7 +5,7 @@
 
 namespace D3D11Framework
 {
-//----------------------------------------------------------
+//------------------------------------------------------
 
 	Log* Log::m_instance = nullptr;
 
@@ -23,7 +23,6 @@ namespace D3D11Framework
 		}
 	}
 
-	
 	Log::~Log()
 	{
 		m_close();
@@ -35,16 +34,17 @@ namespace D3D11Framework
 		if (fopen_s(&m_file, LOGNAME, "w") == 0)
 		{
 			char timer[9];
-			_strtime_s(timer, 9);
 			char date[9];
+
+			_strtime_s(timer, 9);
 			_strdate_s(date, 9);
 
-			fprintf(m_file, "Log has created at: %s %s. \n", date, timer);
-			fprintf(m_file, "---------------------------------------\n\n");
+			fprintf(m_file, "The log file has been created successfully: %s %s.\n", timer, date);
+			fprintf(m_file, "-------------------------------------------------");
 		}
 		else
 		{
-			printf("Error during creation of the log file...\n");
+			Err("Error during creation of the log file\n");
 			m_file = nullptr;
 		}
 	}
@@ -55,76 +55,99 @@ namespace D3D11Framework
 			return;
 
 		char timer[9];
-		_strtime_s(timer, 9);
 		char date[9];
+
+		_strtime_s(timer, 9);
 		_strdate_s(date, 9);
 
-		fprintf(m_file, "\n---------------------------------------\n");
-		fprintf(m_file, "The end of the log: %s %s.", date, timer);
+		fprintf(m_file, "------------------------------------------");
+		fprintf(m_file, "The end of the log file %s %s", timer, date);
+
+		fclose(m_file);
 	}
 
-	void Log::Print(const char *message, ...)
+	void Log::Print(const char* format, ...)
 	{
 		va_list args;
-		va_start(args, message);
+		int len = 0;
+		char* buffer = nullptr;
 
-		int len = _vscprintf(message, args)		// _vsprintf doesn't 
-										+ 1;	// terminating '\0'	
-		//char *buffer = static_cast<char*>(malloc(len * sizeof(char)));
-		char* buffer = new char [len * sizeof(char)];
-		vsprintf_s(buffer, len, message, args);	
+		va_start(args, format);
+		len = _vscprintf(format, args) + 1;
+
+		buffer = new char[len];
+		assert(buffer);
+
+		vsprintf_s(buffer, len, format, args);
 		m_print("", buffer);
-		va_end(args);
 
 		delete[] buffer;
 		buffer = nullptr;
+		va_end(args);
 	}
 
-	void Log::Debug(const char *message, ...)
+	void Log::Debug(const char* format, ...)
 	{
 #ifdef _DEBUG
-		va_list args;
-		va_start(args, message);
 
-		int len = _vscprintf(message, args) + 1;
-		char *buffer = new char [len * sizeof(char)];
-		vsprintf_s(buffer, len, message, args);
-		m_print("*DEBUG: ", buffer);
-		va_end(args);
+		va_list args;
+		int len = 0;
+		char* buffer = nullptr;
+
+		va_start(args, format);
+		len = _vscprintf(format, args) + 1;
+
+		buffer = new char[len];
+		assert(buffer);
+
+		vsprintf_s(buffer, len, format, args);
+		m_print("*DEBUG", buffer);
 
 		delete[] buffer;
 		buffer = nullptr;
+		va_end(args);
+
 #endif
 	}
 
-	void Log::Err(const char *message, ...)
+	void Log::Err(const char* format, ...)
 	{
 		va_list args;
-		va_start(args, message);
-		int len = _vscprintf(message, args) + 1;
-		char *buffer = new char [len * sizeof(char)];
-		vsprintf_s(buffer, len, message, args);
-		m_print("*ERROR: ", buffer);
-		va_end(args);
+		int len = 0;
+		char* buffer = nullptr;
+
+		va_start(args, format);
+		len = _vscprintf(format, args) + 1;
+
+		buffer = new char[len];
+		assert(buffer);
+
+		vsprintf_s(buffer, len, format, args);
+		m_print("*ERROR", buffer);
 
 		delete[] buffer;
 		buffer = nullptr;
+		va_end(args);
 	}
+	
 
 	void Log::m_print(const char* levtext, const char* text)
 	{
 		char timer[9];
+		clock_t cl = 0;
+
 		_strtime_s(timer, 9);
-		clock_t cl = clock();
+		cl = clock();
 
-		printf("%s::%d: %s%s\n", timer, cl, levtext, text);
+		printf("%s::%d: %s:%s.\n", timer, cl, levtext, text);	// output into the console
 
-		if (m_file)
+		if (m_file)		// output into the log file
 		{
-			fprintf(m_file, "%s::%s: %s%s\n", timer, cl, levtext, text);
+			fprintf(m_file, "%s::%d: %s:%s.\n", timer, cl, levtext, text);
 			fflush(m_file);
 		}
 	}
 
-//----------------------------------------------------------
+
+//------------------------------------------------------
 }

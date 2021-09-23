@@ -2,6 +2,8 @@
 
 namespace D3D11Framework
 {
+//-----------------------------------------
+
 	class Log
 	{
 	public:
@@ -17,10 +19,12 @@ namespace D3D11Framework
 	private:
 		static Log* m_instance;
 
-		void m_init();
-		void m_close();
+		void m_init(void);
+		void m_close(void);
 		void m_print(const char* levtext, const char* text);
 
 		FILE* m_file;
 	};
+
+//-----------------------------------------
 }
