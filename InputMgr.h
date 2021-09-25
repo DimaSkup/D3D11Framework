@@ -4,8 +4,7 @@
 
 namespace D3D11Framework
 {
-//-----------------------------------------------------
-
+//----------------------------------------------------------------
 	class InputListener;
 
 	class InputMgr
@@ -18,7 +17,7 @@ namespace D3D11Framework
 
 		void AddListener(InputListener* Listener);
 
-		// the window zode
+		// the window zone
 		void SetWinRect(const RECT &winrect);
 
 	private:

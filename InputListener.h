@@ -7,10 +7,9 @@ namespace D3D11Framework
 	// mouse events
 	struct MouseEvent
 	{
-		MouseEvent(int nx, int ny) 
+		MouseEvent(int nx, int ny)
 			: x(nx), y(ny) {}
 
-		// mouse coordinates
 		int x;
 		int y;
 	};
@@ -21,7 +20,7 @@ namespace D3D11Framework
 		MouseEventClick(eMouseKeyCodes b, int nx, int ny)
 			: MouseEvent(nx, ny), btn(b) {}
 
-		const eMouseKeyCodes btn;		// keybutton
+		const eMouseKeyCodes btn;		// mouse button code
 	};
 
 	// mouse wheel event
@@ -30,17 +29,17 @@ namespace D3D11Framework
 		MouseEventWheel(int nwheel, int nx, int ny)
 			: MouseEvent(nx, ny), wheel(nwheel) {}
 
-		int wheel;
+		int wheel;	// direction of the wheel moving
 	};
 
 	// keybutton event
 	struct KeyEvent
 	{
-		KeyEvent(wchar_t c, eKeyCodes kc) 
+		KeyEvent(wchar_t c, eKeyCodes kc)
 			: wc(c), code(kc) {}
 
-		const wchar_t wc;
-		const eKeyCodes code;
+		const wchar_t wc;			// Unicode character of the pressed keybutton
+		const eKeyCodes code;		// key-code of the pressed keybutton
 	};
 
 
@@ -63,6 +62,28 @@ namespace D3D11Framework
 		// keybutton is released
 		virtual bool KeyReleased(const KeyEvent &arg) { return false; }
 	};
+	
 
 //----------------------------------------------------------------
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
