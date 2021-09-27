@@ -82,8 +82,3 @@ namespace D3D11Framework
 
 
 
-
-
-
-
-

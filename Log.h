@@ -2,15 +2,15 @@
 
 namespace D3D11Framework
 {
-//-----------------------------------------
+//---------------------------------------------
 
 	class Log
 	{
 	public:
-		Log();
-		~Log();
+		Log(void);
+		~Log(void);
 
-		static Log* Get() { return m_instance; }
+		static Log* Get(void) { return m_instance; }
 
 		void Print(const char* format, ...);
 		void Debug(const char* format, ...);
@@ -26,5 +26,5 @@ namespace D3D11Framework
 		FILE* m_file;
 	};
 
-//-----------------------------------------
+//---------------------------------------------
 }

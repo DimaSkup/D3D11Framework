@@ -5,7 +5,7 @@
 
 namespace D3D11Framework
 {
-//------------------------------------------------------
+//--------------------------------------------------
 
 	Log* Log::m_instance = nullptr;
 
@@ -19,7 +19,7 @@ namespace D3D11Framework
 		}
 		else
 		{
-			Err("The log file has already been created");
+			Err("The log file has already been created...");
 		}
 	}
 
@@ -31,20 +31,20 @@ namespace D3D11Framework
 
 	void Log::m_init()
 	{
+		char timer[9];
+		char date[9];
+
+		_strtime_s(timer, 9);
+		_strdate_s(date, 9);
+
 		if (fopen_s(&m_file, LOGNAME, "w") == 0)
 		{
-			char timer[9];
-			char date[9];
-
-			_strtime_s(timer, 9);
-			_strdate_s(date, 9);
-
-			fprintf(m_file, "The log file has been created successfully: %s %s.\n", timer, date);
-			fprintf(m_file, "-------------------------------------------------");
+			fprintf(m_file, "%s %s: The log file has been created successfully!\n", timer, date);
+			fprintf(m_file, "---------------------------------------------------\n");
 		}
 		else
 		{
-			Err("Error during creation of the log file\n");
+			Err("%s %s: An error has occured during creation of the log file...\n", timer, date);
 			m_file = nullptr;
 		}
 	}
@@ -60,9 +60,10 @@ namespace D3D11Framework
 		_strtime_s(timer, 9);
 		_strdate_s(date, 9);
 
-		fprintf(m_file, "------------------------------------------");
-		fprintf(m_file, "The end of the log file %s %s", timer, date);
+		fprintf(m_file, "\n---------------------------------\n");
+		fprintf(m_file, "%s %s: The end of the log file.\n", timer, date);
 
+		fflush(m_file);
 		fclose(m_file);
 	}
 
@@ -129,25 +130,22 @@ namespace D3D11Framework
 		buffer = nullptr;
 		va_end(args);
 	}
-	
 
 	void Log::m_print(const char* levtext, const char* text)
 	{
+		time_t cl = clock();		// time clock
 		char timer[9];
-		clock_t cl = 0;
 
 		_strtime_s(timer, 9);
-		cl = clock();
 
-		printf("%s::%d: %s:%s.\n", timer, cl, levtext, text);	// output into the console
+		printf("%s %d: %s %s.\n", timer, cl, levtext, text);
 
-		if (m_file)		// output into the log file
+		if (m_file)
 		{
-			fprintf(m_file, "%s::%d: %s:%s.\n", timer, cl, levtext, text);
+			fprintf(m_file, "%s::%d: %s %s.\n", timer, cl, levtext, text);
 			fflush(m_file);
 		}
 	}
 
-
-//------------------------------------------------------
+//--------------------------------------------------
 }

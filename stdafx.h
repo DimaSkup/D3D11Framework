@@ -19,5 +19,3 @@
 #else
 #		pragma comment (lib, "d3dx11.lib")
 #endif
-
-#pragma warning (disable : 4996)

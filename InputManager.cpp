@@ -1,40 +1,42 @@
 #include "stdafx.h"
-#include "InputMgr.h"
 #include "InputCodes.h"
 #include "InputListener.h"
+#include "InputManager.h"
 #include "Log.h"
 
 namespace D3D11Framework
 {
-//---------------------------------------------------------
-
-	void InputMgr::Init()
+	void InputManager::Init()
 	{
 		m_MouseWheel = m_curx = m_cury = 0;
-		Log::Get()->Debug("InputMgr init");
+		Log::Get()->Debug("Input Manager init");
 	}
 
-	void InputMgr::Close()
+	void InputManager::Close()
 	{
 		if (!m_Listener.empty())
 			m_Listener.clear();
-		Log::Get()->Debug("InputMgr close");
+
+		Log::Get()->Debug("Input Manager close");
 	}
 
-	void InputMgr::SetWinRect(const RECT &winrect)
+	// set the window zone
+	void InputManager::SetWinRect(const RECT &winrect)
 	{
-		m_windowrect.left = winrect.left;
-		m_windowrect.right = winrect.right;
 		m_windowrect.top = winrect.top;
 		m_windowrect.bottom = winrect.bottom;
+		m_windowrect.right = winrect.right;
+		m_windowrect.left = winrect.left;
 	}
 
-	void InputMgr::AddListener(InputListener* Listener)
+	// add a new listener
+	void InputManager::AddListener(InputListener* Listener)
 	{
 		m_Listener.push_back(Listener);
 	}
 
-	void InputMgr::Run(const UINT& msg, WPARAM wParam, LPARAM lParam)
+	// get an event from Windows, do some action and notify the listeners
+	void InputManager::Run(const UINT &msg, WPARAM wParam, LPARAM lParam)
 	{
 		if (m_Listener.empty())
 			return;
@@ -43,21 +45,22 @@ namespace D3D11Framework
 		wchar_t buffer[1];
 		BYTE lpKeyState[256];
 
-		m_eventcursor();		// mouse moving event
+		m_eventcursor();	// mouse moving event
 
-		switch (msg)
+		switch(msg)
 		{
 		case WM_KEYDOWN:
-			KeyIndex = static_cast<eKeyCodes>(wParam);		
+			KeyIndex = static_cast<eKeyCodes>(wParam);
 			GetKeyboardState(lpKeyState);
 			ToUnicode(wParam,		// the code of virtual key
-					  HIWORD(lParam) & 0xFF, // scan-code of the key
-					  lpKeyState,	// a pointer to the 256-byte array which contains a keyboard current state
-					  buffer,	// put here translated symbol or symbols Unicode
-					  1,		// the buffer size
-					  0);		// flags: 0 -- the menu is active
+				HIWORD(lParam) & 0xFF,	// scan-code of the key
+				lpKeyState,	// a pointer to the 256-byte array which contains a keyboard current state
+				buffer,		// put here translated symbol or symbols Unicode
+				1,			// the buffer size
+				0);			// flags: 0 -- the menu is active
 			m_eventkey(KeyIndex, buffer[0], true);
 			break;
+
 		case WM_KEYUP:
 			KeyIndex = static_cast<eKeyCodes>(wParam);
 			GetKeyboardState(lpKeyState);
@@ -76,12 +79,15 @@ namespace D3D11Framework
 			break;
 		case WM_LBUTTONUP:
 			m_eventmouse(MOUSE_LEFT, false);
+			break;
 
 		// RMB
 		case WM_RBUTTONDOWN:
 			m_eventmouse(MOUSE_RIGHT, true);
+			break;
 		case WM_RBUTTONUP:
 			m_eventmouse(MOUSE_RIGHT, false);
+			break;
 
 		// MMB
 		case WM_MBUTTONDOWN:
@@ -89,7 +95,7 @@ namespace D3D11Framework
 			break;
 		case WM_MBUTTONUP:
 			m_eventmouse(MOUSE_MIDDLE, false);
-			break;
+
 
 		// MOUSE WHEEL
 		case WM_MOUSEWHEEL:
@@ -98,7 +104,7 @@ namespace D3D11Framework
 		}
 	}
 
-	void InputMgr::m_eventcursor()
+	void InputManager::m_eventcursor()
 	{
 		POINT Position;
 		GetCursorPos(&Position);		// get current position of the cursor
@@ -121,7 +127,7 @@ namespace D3D11Framework
 		}
 	}
 
-	void InputMgr::m_eventmouse(const eMouseKeyCodes Code, bool press)
+	void InputManager::m_eventmouse(const eMouseKeyCodes Code, bool press)
 	{
 		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
 		{
@@ -143,7 +149,7 @@ namespace D3D11Framework
 		}
 	}
 
-	void InputMgr::m_mousewheel(short Value)
+	void InputManager::m_mousewheel(short Value)
 	{
 		if (m_MouseWheel == Value)
 			return;
@@ -159,7 +165,7 @@ namespace D3D11Framework
 		}
 	}
 
-	void InputMgr::m_eventkey(const eKeyCodes KeyCode, const wchar_t ch, bool press)
+	void InputManager::m_eventkey(const eKeyCodes KeyCode, const wchar_t ch, bool press)
 	{
 		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
 		{
