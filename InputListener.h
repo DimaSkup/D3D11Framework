@@ -35,8 +35,8 @@ namespace D3D11Framework
 	// keybutton event
 	struct KeyEvent
 	{
-		KeyEvent(wchar_t c, eKeyCodes kc)
-			: wc(c), code(kc) {}
+		KeyEvent(eKeyCodes kc, wchar_t c)
+			: code(kc), wc(c) {}
 
 		const wchar_t wc;			// Unicode character of the pressed keybutton
 		const eKeyCodes code;		// key-code of the pressed keybutton

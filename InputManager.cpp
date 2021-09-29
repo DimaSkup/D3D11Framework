@@ -45,10 +45,11 @@ namespace D3D11Framework
 		wchar_t buffer[1];
 		BYTE lpKeyState[256];
 
-		m_eventcursor();	// mouse moving event
+		m_eventcursor();	// create a mouse moving event
 
 		switch(msg)
 		{
+		// KEYBUTTON events
 		case WM_KEYDOWN:
 			KeyIndex = static_cast<eKeyCodes>(wParam);
 			GetKeyboardState(lpKeyState);
@@ -73,7 +74,7 @@ namespace D3D11Framework
 			m_eventkey(KeyIndex, buffer[0], false);
 			break;
 
-		// LMB
+		// LMB events
 		case WM_LBUTTONDOWN:
 			m_eventmouse(MOUSE_LEFT, true);
 			break;
@@ -81,7 +82,7 @@ namespace D3D11Framework
 			m_eventmouse(MOUSE_LEFT, false);
 			break;
 
-		// RMB
+		// RMB events
 		case WM_RBUTTONDOWN:
 			m_eventmouse(MOUSE_RIGHT, true);
 			break;
@@ -89,7 +90,7 @@ namespace D3D11Framework
 			m_eventmouse(MOUSE_RIGHT, false);
 			break;
 
-		// MMB
+		// MMB events
 		case WM_MBUTTONDOWN:
 			m_eventmouse(MOUSE_MIDDLE, true);
 			break;
@@ -97,17 +98,18 @@ namespace D3D11Framework
 			m_eventmouse(MOUSE_MIDDLE, false);
 
 
-		// MOUSE WHEEL
+		// MOUSE WHEEL event
 		case WM_MOUSEWHEEL:
 			m_mousewheel((short)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA);
 			break;
 		}
 	}
 
+	// create a mouse moving event
 	void InputManager::m_eventcursor()
 	{
 		POINT Position;
-		GetCursorPos(&Position);		// get current position of the cursor
+		GetCursorPos(&Position);
 
 		Position.x -= m_windowrect.left;
 		Position.y -= m_windowrect.top;
@@ -127,28 +129,30 @@ namespace D3D11Framework
 		}
 	}
 
-	void InputManager::m_eventmouse(const eMouseKeyCodes Code, bool press)
+	// create a mouse button clicking event
+	void InputManager::m_eventmouse(const eMouseKeyCodes code, bool press)
 	{
 		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
 		{
 			if (!(*it))
 				continue;
 
-			// button is pressed
+			// mouse button is pressed
 			if (press == true)
 			{
-				if ((*it)->MousePressed(MouseEventClick(Code, m_curx, m_cury)) == true)
+				if ((*it)->MousePressed(MouseEventClick(code, m_curx, m_cury)) == true)
 					return;
 			}
-			// button is released
+			// mouse button is released
 			else
 			{
-				if ((*it)->MouseReleased(MouseEventClick(Code, m_curx, m_cury)) == true)
+				if ((*it)->MouseReleased(MouseEventClick(code, m_curx, m_cury)) == true)
 					return;
 			}
 		}
 	}
 
+	// create a mouse wheel rotating event
 	void InputManager::m_mousewheel(short Value)
 	{
 		if (m_MouseWheel == Value)
@@ -160,31 +164,31 @@ namespace D3D11Framework
 		{
 			if (!(*it))
 				continue;
-			else if ((*it)->MouseWheel(MouseEventWheel(m_MouseWheel, m_curx, m_cury)) == true)
+
+			if ((*it)->MouseWheel(MouseEventWheel(m_MouseWheel, m_curx, m_cury)) == true)
 				return;
 		}
 	}
 
-	void InputManager::m_eventkey(const eKeyCodes KeyCode, const wchar_t ch, bool press)
+	// create a keybutton event
+	void InputManager::m_eventkey(const eKeyCodes code, const wchar_t wc, bool press)
 	{
 		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
 		{
 			if (!(*it))
 				continue;
 
-			// button is pressed
+			// keybutton is pressed
 			if (press == true)
 			{
-				if ((*it)->KeyPressed(KeyEvent(ch, KeyCode)) == true)
+				if ((*it)->KeyPressed(KeyEvent(code, wc)) == true)
 					return;
 			}
-			// button is released
+			// keybutton is released
 			else
 			{
-				if ((*it)->KeyReleased(KeyEvent(ch, KeyCode)) == true)
-				{
+				if ((*it)->KeyReleased(KeyEvent(code, wc)) == true)
 					return;
-				}
 			}
 		}
 	}

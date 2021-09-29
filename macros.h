@@ -1,5 +1,11 @@
 #pragma once 
 
+/*
+
+template<typename T> void remove(T*& p) { delete p; p = nullptr; }
+
+*/
+
 #define _DELETE(p)			{ if(p) { delete(p); p = nullptr; } }
 #define _DELETE_ARRAY(p)	{ if(p) { delete[](p); p = nullptr; } }
 #define _RELEASE(p)			{ if(p) { (p)->Release(); p = nullptr; } }

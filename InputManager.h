@@ -22,13 +22,13 @@ namespace D3D11Framework
 		void SetWinRect(const RECT &winrect);
 
 	private:
-		// mouse moving event
-		void m_eventcursor();
-		// mouse clicking event
+		// create a mouse moving event
+		void m_eventcursor(void);
+		// create a mouse clicking event
 		void m_eventmouse(const eMouseKeyCodes kc, bool press);
-		// mouse wheel rotating event
+		// create a mouse wheel rotating event
 		void m_mousewheel(short Value);
-		// keybutton event
+		// create a keybutton event
 		void m_eventkey(const eKeyCodes kc, const wchar_t wc, bool press);
 
 		std::list<InputListener*> m_Listener;	// the list of our listeners
