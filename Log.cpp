@@ -5,7 +5,8 @@
 
 namespace D3D11Framework
 {
-//--------------------------------------------------
+//-------------------------------------------------------------
+
 
 	Log* Log::m_instance = nullptr;
 
@@ -19,7 +20,7 @@ namespace D3D11Framework
 		}
 		else
 		{
-			Err("The log file has already been created...");
+			Err("The log file has already been created!");
 		}
 	}
 
@@ -29,6 +30,7 @@ namespace D3D11Framework
 		m_instance = nullptr;
 	}
 
+
 	void Log::m_init()
 	{
 		char timer[9];
@@ -37,14 +39,15 @@ namespace D3D11Framework
 		_strtime_s(timer, 9);
 		_strdate_s(date, 9);
 
+
 		if (fopen_s(&m_file, LOGNAME, "w") == 0)
 		{
-			fprintf(m_file, "%s %s: The log file has been created successfully!\n", timer, date);
-			fprintf(m_file, "---------------------------------------------------\n");
+			fprintf(m_file, "%s %s: The log file has been created successfully\n", timer, date);
+			fprintf(m_file, "-------------------------------------------------\n\n");
 		}
 		else
 		{
-			Err("%s %s: An error has occured during creation of the log file...\n", timer, date);
+			Err("%s %s: Error during creation of the log file...", timer, date);
 			m_file = nullptr;
 		}
 	}
@@ -60,26 +63,26 @@ namespace D3D11Framework
 		_strtime_s(timer, 9);
 		_strdate_s(date, 9);
 
-		fprintf(m_file, "\n---------------------------------\n");
+		fprintf(m_file, "\n\n-------------------------------------\n");
 		fprintf(m_file, "%s %s: The end of the log file.\n", timer, date);
 
 		fflush(m_file);
 		fclose(m_file);
 	}
 
-	void Log::Print(const char* format, ...)
+	void Log::Print(const char* message, ...)
 	{
 		va_list args;
 		int len = 0;
 		char* buffer = nullptr;
 
-		va_start(args, format);
-		len = _vscprintf(format, args) + 1;
+		va_start(args, message);
+		len = _vscprintf(message, args) + 1;
 
 		buffer = new char[len];
 		assert(buffer);
 
-		vsprintf_s(buffer, len, format, args);
+		vsprintf_s(buffer, len, message, args);
 		m_print("", buffer);
 
 		delete[] buffer;
@@ -87,7 +90,7 @@ namespace D3D11Framework
 		va_end(args);
 	}
 
-	void Log::Debug(const char* format, ...)
+	void Log::Debug(const char* message, ...)
 	{
 #ifdef _DEBUG
 
@@ -95,13 +98,13 @@ namespace D3D11Framework
 		int len = 0;
 		char* buffer = nullptr;
 
-		va_start(args, format);
-		len = _vscprintf(format, args) + 1;
+		va_start(args, message);
+		len = _vscprintf(message, args) + 1;
 
 		buffer = new char[len];
 		assert(buffer);
 
-		vsprintf_s(buffer, len, format, args);
+		vsprintf_s(buffer, len, message, args);
 		m_print("*DEBUG", buffer);
 
 		delete[] buffer;
@@ -111,19 +114,20 @@ namespace D3D11Framework
 #endif
 	}
 
-	void Log::Err(const char* format, ...)
+
+	void Log::Err(const char* message, ...)
 	{
 		va_list args;
 		int len = 0;
 		char* buffer = nullptr;
 
-		va_start(args, format);
-		len = _vscprintf(format, args) + 1;
+		va_start(args, message);
+		len = _vscprintf(message, args) + 1;
 
 		buffer = new char[len];
 		assert(buffer);
 
-		vsprintf_s(buffer, len, format, args);
+		vsprintf_s(buffer, len, message, args);
 		m_print("*ERROR", buffer);
 
 		delete[] buffer;
@@ -131,21 +135,20 @@ namespace D3D11Framework
 		va_end(args);
 	}
 
+
 	void Log::m_print(const char* levtext, const char* text)
 	{
-		time_t cl = clock();		// time clock
+		time_t cl = clock();
 		char timer[9];
 
-		_strtime_s(timer, 9);
-
-		printf("%s %d: %s %s.\n", timer, cl, levtext, text);
+		printf("%::%s: %s:%d", levtext, text, timer, cl);
 
 		if (m_file)
 		{
-			fprintf(m_file, "%s::%d: %s %s.\n", timer, cl, levtext, text);
+			fprintf(m_file, "%::%s: %s:%d", levtext, text, timer, cl);
 			fflush(m_file);
 		}
 	}
 
-//--------------------------------------------------
+//-------------------------------------------------------------
 }

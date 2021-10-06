@@ -9,6 +9,197 @@ namespace D3D11Framework
 	void InputManager::Init()
 	{
 		m_MouseWheel = m_curx = m_cury = 0;
+		Log::Get()->Debug("Input Manager init()");
+	}
+
+	void InputManager::Close()
+	{
+		if (!m_Listener.empty())
+			m_Listener.clear();
+
+		Log::Get()->Debug("Input Manager close()");
+	}
+
+	void InputManager::SetWinRect(const RECT &windowrect)
+	{
+		m_windowrect.top = windowrect.top;
+		m_windowrect.bottom = windowrect.bottom;
+		m_windowrect.right = windowrect.right;
+		m_windowrect.left = windowrect.left;
+	}
+
+	void InputManager::AddListener(InputListener* Listener)
+	{
+		m_Listener.push_back(Listener);
+	}
+
+
+	void InputManager::Run(const UINT &msg, WPARAM wParam, LPARAM lParam)
+	{
+		if (m_Listener.empty())
+		{
+			Log::Get()->Err("InputManager:Run(): There is no listener yet");
+			return;
+		}
+
+		eKeyCodes KeyIndex;
+		wchar_t buffer[1];
+		BYTE lpKeyState[256];
+
+		m_eventcursor();
+
+		switch (msg)
+		{
+		// KEYBUTTON events
+		case WM_KEYDOWN:
+			KeyIndex = static_cast<eKeyCodes>(wParam);
+			GetKeyboardState(lpKeyState);
+			ToUnicode(wParam,
+					HIWORD(lParam) & 0xFF,
+					lpKeyState,
+					buffer,
+					1,
+					0);
+			m_eventkey(KeyIndex, buffer[0], true);
+			break;
+
+		case WM_KEYUP:
+			KeyIndex = static_cast<eKeyCodes>(wParam);
+			GetKeyboardState(lpKeyState);
+			ToUnicode(wParam,
+					HIWORD(lParam) & 0xFF,
+					lpKeyState,
+					buffer,
+					1,
+					0);
+			m_eventkey(KeyIndex, buffer[0], false);
+			break;
+
+
+		// MOUSE LEFT BUTTON events
+		case WM_LBUTTONDOWN:
+			m_eventmouse(MOUSE_LEFT, true);
+			break;
+		case WM_LBUTTONUP:
+			m_eventmouse(MOUSE_LEFT, false);
+			break;
+
+		// MOUSE RIGHT BUTTON events
+		case WM_RBUTTONDOWN:
+			m_eventmouse(MOUSE_RIGHT, true);
+			break;
+		case WM_RBUTTONUP:
+			m_eventmouse(MOUSE_RIGHT, false);
+			break;
+
+		// an event of MOUSE WHEEL clicking
+		case WM_MBUTTONDOWN:
+			m_eventmouse(MOUSE_MIDDLE, true);
+			break;
+		case WM_MBUTTONUP:
+			m_eventmouse(MOUSE_MIDDLE, false);
+			break;
+
+		// an event of MOUSE WHEEL rotating
+		case WM_MOUSEWHEEL:
+			m_mousewheel(static_cast<short>(GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA));
+			break;
+		}
+	}
+
+
+	void InputManager::m_eventcursor()
+	{
+		POINT pos;
+		GetCursorPos(&pos);
+
+		pos.x -= m_windowrect.left;
+		pos.y -= m_windowrect.bottom;
+
+		if (m_curx == pos.x && m_cury == pos.y)
+			return;
+
+		m_curx = pos.x;
+		m_cury = pos.y;
+
+		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
+		{
+			if (!(*it))
+				continue;
+
+			if ((*it)->MouseMove(MouseEvent(m_curx, m_cury)) == true)
+				return;
+		}
+	}
+
+	// create an event of mouse button clicking/releasing and pass it to the handler
+	void InputManager::m_eventmouse(const eMouseKeyCodes code, bool press)
+	{
+		for (auto it = m_Listener.begin(); it != m_Listener.end(); ++it)
+		{
+			if (!(*it))
+				continue;
+
+			// mouse button is pressed
+			if (press == true)
+			{
+				if ((*it)->MousePressed(MouseEventClick(code, m_curx, m_cury)) == true)
+					return;
+			}
+			// mouse button is released
+			{
+				if ((*it)->MouseReleased(MouseEventClick(code, m_curx, m_cury)) == true)
+					return;
+			}
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+#include "stdafx.h"
+#include "InputCodes.h"
+#include "InputListener.h"
+#include "InputManager.h"
+#include "Log.h"
+
+namespace D3D11Framework
+{
+	void InputManager::Init()
+	{
+		m_MouseWheel = m_curx = m_cury = 0;
 		Log::Get()->Debug("Input Manager init");
 	}
 
@@ -195,3 +386,5 @@ namespace D3D11Framework
 
 //---------------------------------------------------------
 }
+
+*/

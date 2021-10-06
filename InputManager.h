@@ -4,6 +4,8 @@
 
 namespace D3D11Framework
 {
+//------------------------------------------------------------------------
+
 	class InputListener;
 
 	class InputManager
@@ -12,7 +14,8 @@ namespace D3D11Framework
 		void Init(void);
 		void Close(void);
 
-		// get an event from Windows, do some action and notify the listeners
+		// get a message about some event from Windows, 
+		// handle this message and notify the listeners
 		void Run(const UINT &msg, WPARAM wParam, LPARAM lParam);
 
 		// add a new listener
@@ -39,5 +42,5 @@ namespace D3D11Framework
 		int m_MouseWheel;
 	};
 
-//-----------------------------------------------------
+//------------------------------------------------------------------------
 }
