@@ -76,7 +76,7 @@ namespace D3D11Framework
 		static Window* m_wndthis;
 
 		DescWindow m_desc;		// the window description
-		InputManager* inputManager;
+		InputManager* m_inputManager;
 		HWND m_hwnd;			// the window handler
 		bool m_isexit;			// the flag which notifies about the exit event
 		bool m_active;			// is the window active?
@@ -92,3 +92,4 @@ namespace D3D11Framework
 
 //----------------------------------------------------
 }
+
