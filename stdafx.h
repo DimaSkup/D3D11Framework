@@ -13,9 +13,4 @@
 #include <d3dx11.h>
 
 #pragma comment (lib, "d3d11.lib")
-
-#ifdef _DEBUG
-#		pragma comment (lib, "d3dx11d.lib")
-#else
-#		pragma comment (lib, "d3dx11.lib")
-#endif
+#pragma comment (lib, "d3dx11.lib")

@@ -141,11 +141,11 @@ namespace D3D11Framework
 		time_t cl = clock();
 		char timer[9];
 
-		printf("%::%s: %s:%d", levtext, text, timer, cl);
+		printf("%s::%s: %s:%I64d", levtext, text, timer, cl);
 
 		if (m_file)
 		{
-			fprintf(m_file, "%::%s: %s:%d", levtext, text, timer, cl);
+			fprintf(m_file, "%s::%s: %s:%I64d", levtext, text, timer, cl);
 			fflush(m_file);
 		}
 	}

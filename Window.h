@@ -2,19 +2,20 @@
 
 namespace D3D11Framework
 {
-//----------------------------------------------------
+//-------------------------------------------------------------------
 
 	class InputManager;
 
+	// the window description struct
 	struct DescWindow
 	{
 		DescWindow() :
-			caption(L""),
+			caption(L""),			// a heading of the window
 			width(640),
 			height(480),
 			posx(200),
 			posy(20),
-			resizing(true) 
+			resizing(true)			// can we resize the window?
 		{}
 
 		int posx;
@@ -54,12 +55,12 @@ namespace D3D11Framework
 		// return the window caption
 		const std::wstring& GetCaption() const { return m_desc.caption; }
 
-		// notify, if there was a message about exit
+		// notifies if there was a message about exit
 		bool IsExit() const { return m_isexit; }
-		// notify about window activity
+		// notifies about window activity
 		bool IsActive() const { return m_active; }
-		// notify about window changes
-		// warning: after calling notifies the window about event handling
+		// notifies about window changes
+		// warning: after calling it notifies the window about event handling
 		bool IsResize()
 		{
 			bool ret = m_isresize;
@@ -90,5 +91,5 @@ namespace D3D11Framework
 	// events handling
 	static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-//----------------------------------------------------
+//-------------------------------------------------------------------
 }
