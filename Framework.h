@@ -1,33 +1,32 @@
 #pragma once
 
 #include "Window.h"
-#include "Render.h"
 #include "InputManager.h"
+#include "Render.h"
 #include "Log.h"
 
 namespace D3D11Framework
 {
 //-------------------------------------------------------------------
-
 	class Framework
 	{
 	public:
 		Framework();
 		~Framework();
 
-		bool Init();
-		void Run();
-		void Close();
+		bool Init(void);
+		void Run(void);
+		void Close(void);
 
 		void SetRender(Render* render) { m_render = render; }
-		void AddInputListener(InputListener* listener);
+		void AddInputListener(InputListener* inputListener);
 
 	protected:
-		bool m_frame();
+		bool m_frame();		// handling of each the frame
 
 		Window* m_wnd;
 		Render* m_render;
-		InputManager *m_input;
+		InputManager* m_input;
 		Log m_log;
 		bool m_init;		// if it has been initialized
 	};

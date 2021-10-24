@@ -7,16 +7,16 @@ namespace D3D11Framework
 {
 //-------------------------------------------------------------------
 
-	Framework::Framework() :
+	Framework::Framework(void) :
 		m_wnd(nullptr),
 		m_render(nullptr),
 		m_input(nullptr),
-		m_init(false)
+		m_init(nullptr)
 	{
 
 	}
 
-	Framework::~Framework()
+	Framework::~Framework(void)
 	{
 
 	}
@@ -27,31 +27,31 @@ namespace D3D11Framework
 			m_input->AddListener(listener);
 	}
 
-	void Framework::Run()
+	void Framework::Run(void)
 	{
 		if (m_init)
 			while (m_frame());
 	}
 
-	bool Framework::Init()
+	bool Framework::Init(void)
 	{
-		m_wnd = new Window();
-		m_input = new InputManager();
+		m_wnd = new(std::nothrow) Window();
+		m_input = new(std::nothrow) InputManager();
 
 		if (!m_wnd || !m_input)
 		{
-			Log::Get()->Err("Framework::Init(): Can't allocate the memory");
+			Log::Get()->Err("Framework::Init(): can't allocated the memory");
 			return false;
 		}
 
 		m_input->Init();
 
-		// Set up parameters by default. 
+		// Set up parameters by default
 		DescWindow desc;
 
 		if (!m_wnd->Create(desc))
 		{
-			Log::Get()->Err("Framework::Init(): Can't create the window");
+			Log::Get()->Err("Framework::Init(): can't create the window");
 			return false;
 		}
 
@@ -59,7 +59,7 @@ namespace D3D11Framework
 
 		if (!m_render->Init(m_wnd->GetHWND()))
 		{
-			Log::Get()->Err("Framework::Init(): Can't create the render");
+			Log::Get()->Err("Framework::Init(): can't initialize the render");
 			return false;
 		}
 
@@ -67,10 +67,11 @@ namespace D3D11Framework
 		return true;
 	}
 
-	bool Framework::m_frame()
+	bool Framework::m_frame(void)
 	{
 		// handle window events
 		m_wnd->RunEvent();
+
 		// if the window is inactive - finish the frame
 		if (!m_wnd->IsActive())
 			return true;
@@ -91,13 +92,12 @@ namespace D3D11Framework
 		return true;
 	}
 
-	void Framework::Close()
+	void Framework::Close(void)
 	{
 		m_init = false;
+		_CLOSE(m_input);
 		_CLOSE(m_render);
 		_CLOSE(m_wnd);
-		_CLOSE(m_input);
 	}
-
 //-------------------------------------------------------------------
 }
