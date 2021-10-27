@@ -2,18 +2,14 @@
 
 namespace D3D11Framework
 {
-//-------------------------------------------------------------------
-
 	class Render
 	{
 	public:
-		Render();
-		virtual ~Render();
+		Render(void);
+		virtual ~Render(void);
 
 		virtual bool Init(HWND hWnd) = 0;
-		virtual bool Draw() = 0;
-		virtual void Close() = 0;
+		virtual bool Draw(void) = 0;
+		virtual bool Close(void) = 0;
 	};
-
-//-------------------------------------------------------------------
 }

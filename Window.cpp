@@ -1,3 +1,5 @@
+// the last revising was in 24.10.21
+
 #include "stdafx.h"
 #include "Window.h"
 #include "InputManager.h"

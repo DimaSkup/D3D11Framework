@@ -5,12 +5,12 @@ namespace D3D11Framework
 {
 //-------------------------------------------------------------------
 
-	Render::Render()
+	Render::Render(void)
 	{
 
 	}
 
-	Render::~Render()
+	Render::~Render(void)
 	{
 
 	}

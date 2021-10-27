@@ -1,3 +1,5 @@
+// the last revising was in 24.10.21
+
 #pragma once
 
 #include "Window.h"
@@ -27,7 +29,7 @@ namespace D3D11Framework
 		Window* m_wnd;
 		Render* m_render;
 		InputManager* m_input;
-		Log m_log;
+		Log* m_log;
 		bool m_init;		// if it has been initialized
 	};
 
