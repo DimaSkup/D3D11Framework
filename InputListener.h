@@ -1,3 +1,5 @@
+// last revising at 30.10.21
+
 #pragma once
 
 namespace D3D11Framework

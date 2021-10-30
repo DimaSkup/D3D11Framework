@@ -72,11 +72,6 @@ namespace D3D11Framework
 		_CLOSE(m_wnd);
 	}
 
-	void Framework::SetRender(Render* render)
-	{
-		m_render = render;
-	}
-
 	void Framework::AddInputListener(InputListener* listener)
 	{
 		if (m_input)
