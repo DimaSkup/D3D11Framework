@@ -1,10 +1,12 @@
-#pragma once 
+// last revising at 31.10.21
+
+#pragma once
 
 #include <ctime>
 #include <cassert>
 
-#include <string>
 #include <list>
+#include <string>
 
 #define WIN32_MEAN_AND_LEAN
 #include <windows.h>

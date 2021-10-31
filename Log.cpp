@@ -1,3 +1,5 @@
+// last revising at 31.10.21
+
 #include "stdafx.h"
 #include "Log.h"
 

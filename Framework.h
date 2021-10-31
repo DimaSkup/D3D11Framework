@@ -1,4 +1,4 @@
-// the last revising was in 24.10.21
+// the last revising was in 31.10.21
 
 #pragma once
 
@@ -10,17 +10,18 @@
 namespace D3D11Framework
 {
 //-------------------------------------------------------------------
+
 	class Framework
 	{
 	public:
-		Framework();
-		~Framework();
+		Framework(void);
+		~Framework(void);
 
 		bool Init(void);
 		void Run(void);
 		void Close(void);
 
-		void SetRender(Render* render) { m_render = render; }
+		void SetRender(Render* render);
 		void AddInputListener(InputListener* inputListener);
 
 	protected:
