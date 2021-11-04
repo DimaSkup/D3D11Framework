@@ -1,3 +1,126 @@
+// last revising was at 04.11.21
+
+#pragma once 
+
+namespace D3D11Framework
+{
+	class InputManager;
+
+	struct DescWindow
+	{
+		DescWindow() : 
+			caption(L""),
+			posx(200),
+			posy(20),
+			width(640),
+			height(480),
+			resizing(true)
+		{}
+
+		std::wstring caption;
+		int posx;
+		int posy;
+		int width;
+		int height;
+		bool resizing;
+	};
+
+	class Window
+	{
+	public:
+		Window(void);
+
+		static Window* Get() { return m_wndthis; }
+
+		// creation and initialization of the window
+		bool Create(const DescWindow &desc);
+
+		// handling of event messages from the window
+		void RunEvent(void);
+
+		// closing of the window and releasing the memory
+		void Close(void);
+
+		void SetInputManager(InputManager* inputManager);
+
+		HWND Window::GetHWND(void) const { return m_hwnd; }
+		int Window::GetLeft(void) const { return m_desc.posx; }
+		int Window::GetTop(void) const { return m_desc.posy; }
+		int Window::GetWidth(void) const { return m_desc.width; }
+		int Window::GetHeight(void) const { return m_desc.height; }
+
+		const std::wstring& GetCaption(void) const { return m_desc.caption; }
+
+		// if there is an exit, then notifies handlers about it
+		bool IsExit(void) const { return m_isexit; }
+
+		// if the window is active, then notifies handlers about it
+		bool IsActive(void) const { return m_active; }
+
+		bool IsResize(void)
+		{
+			bool ret = m_isresize;
+			m_isresize = false;
+			return ret;
+		}
+
+		LRESULT WndProc(HWND hWnd, const UINT &message, WPARAM wParam, LPARAM lParam);
+	private:
+		void m_UpdateWindowState(void);
+
+		static Window* m_wndthis;
+
+		HWND m_hwnd;
+		DescWindow m_desc;
+		InputManager* m_inputManager;
+
+		bool m_isexit;
+		bool m_active;
+		bool m_maximized;
+		bool m_minimized;
+		bool m_isresize;
+	};
+
+	LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 #pragma once
 
 namespace D3D11Framework
@@ -93,3 +216,5 @@ namespace D3D11Framework
 
 //-------------------------------------------------------------------
 }
+
+*/

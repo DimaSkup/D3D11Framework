@@ -1,4 +1,4 @@
-// the last revising was in 24.10.21
+// the last revising was at 04.11.21
 
 #include "stdafx.h"
 #include "Window.h"
@@ -99,7 +99,7 @@ namespace D3D11Framework
 		Log::Get()->Debug("Window::Close()");
 	}
 
-	LRESULT Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	LRESULT Window::WndProc(HWND hWnd, const UINT &message, WPARAM wParam, LPARAM lParam)
 	{
 		switch (message)
 		{
