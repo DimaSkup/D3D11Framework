@@ -1,9 +1,9 @@
-// last revising at 30.10.21
+// last revising at 11.11.21
 
 #include "stdafx.h"
+#include "InputManager.h"
 #include "InputCodes.h"
 #include "InputListener.h"
-#include "InputManager.h"
 #include "Log.h"
 
 namespace D3D11Framework

@@ -1,8 +1,9 @@
-// the last revising was in 31.10.21
+// the last revising was in 11.11.21
 
 #include "stdafx.h"
 #include "Framework.h"
 #include "macros.h"
+#include "Log.h"
 
 namespace D3D11Framework
 {
@@ -17,12 +18,12 @@ namespace D3D11Framework
 		m_render(nullptr),
 		m_init(false)
 	{
-		m_log->Debug("Framework::Framework(): calling of the constructor");
+		Log::Get()->Print("Framework::Framework(): calling of the constructor");
 	}
 
 	Framework::~Framework(void)
 	{
-		m_log->Debug("Framework::Framework(): calling of the destructor");
+		Log::Get()->Debug("Framework::Framework(): calling of the destructor");
 	}
 
 	void Framework::AddInputListener(InputListener* listener)
@@ -38,14 +39,14 @@ namespace D3D11Framework
 
 	bool Framework::Init(void)
 	{
-		m_log->Debug("Framework::Init()");
+		Log::Get()->Debug("Framework::Init()");
 
 		m_wnd = new (std::nothrow) Window();
 		m_input = new (std::nothrow) InputManager();
 
 		if (!m_wnd || !m_input)
 		{
-			m_log->Err("Framework::Init(): can't allocate the memory");
+			Log::Get()->Err("Framework::Init(): can't allocate the memory");
 			return false;
 		}
 
@@ -56,15 +57,15 @@ namespace D3D11Framework
 
 		if (!m_wnd->Create(desc))
 		{
-			m_log->Err("Framework::Init(): can't create the window");
+			Log::Get()->Err("Framework::Init(): can't create the window");
 			return false;
 		}
 
 		m_wnd->SetInputManager(m_input);
 
-		if (m_render->Init(m_wnd->GetHWND()))
+		if (!m_render->CreateDevice(m_wnd->GetHWND()))
 		{
-			m_log->Err("Framework::Init(): can't initialize the render");
+			Log::Get()->Err("Framework::Init(): can't initialize the render");
 			return false;
 		}
 
@@ -82,7 +83,8 @@ namespace D3D11Framework
 	{
 		m_init = false;
 
-		_CLOSE(m_render);
+		m_render->Shutdown();
+		_DELETE(m_render);
 		_CLOSE(m_input);
 		_CLOSE(m_wnd);
 	}
@@ -116,10 +118,12 @@ namespace D3D11Framework
 
 		}
 
+		m_render->BeginFrame();
 		if (!m_render->Draw())
 		{
 			return false;
 		}
+		m_render->EndFrame();
 
 		return true;
 	}

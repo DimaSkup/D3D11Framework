@@ -1,4 +1,4 @@
-// last revising at 01.11.21
+// last revising at 09.11.21
 
 #include "stdafx.h"
 #include "Log.h"
@@ -16,6 +16,7 @@ namespace D3D11Framework
 			m_instance = this;
 			m_file = nullptr;
 			m_init();
+			printf("Log::Log(): the log file is created successfully\n");
 		}
 		else
 		{
@@ -147,11 +148,11 @@ namespace D3D11Framework
 
 		_strtime_s(timer, 9);
 
-		printf("%s::%I64d: %s%s\n", timer, clockTime, levtext, text);
+		printf("%s::%ld: %s%s\n", timer, clockTime, levtext, text);
 
 		if (m_file)
 		{
-			fprintf(m_file, "%s::%I64d: %s%s\n", timer, clockTime, levtext, text);
+			fprintf(m_file, "%s::%ld: %s%s\n", timer, clockTime, levtext, text);
 			fflush(m_file);
 		}
 	}

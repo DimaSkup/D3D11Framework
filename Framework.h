@@ -1,10 +1,10 @@
-// the last revising was in 31.10.21
+// the last revising was in 11.11.21
 
 #pragma once
 
 #include "Window.h"
-#include "InputManager.h"
 #include "Render.h"
+#include "InputManager.h"
 #include "Log.h"
 
 namespace D3D11Framework
@@ -30,7 +30,7 @@ namespace D3D11Framework
 		Window* m_wnd;
 		Render* m_render;
 		InputManager* m_input;
-		Log* m_log;
+		Log m_log;
 		bool m_init;		// if it has been initialized
 	};
 

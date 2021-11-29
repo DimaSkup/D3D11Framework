@@ -1,4 +1,4 @@
-// last revising at 31.10.21
+// last revising at 09.11.21
 
 #pragma once 
 
@@ -14,4 +14,4 @@ template<typename T> void remove(T*& p) { delete p; p = nullptr; }
 #define _CLOSE(p)			{ if (p) { (p)->Close(); delete(p); p = nullptr; }}
 
 // current version of the framework
-#define _VERSION_FRAMEWORK 1
+#define _VERSION_FRAMEWORK 2

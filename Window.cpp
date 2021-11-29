@@ -11,7 +11,7 @@ namespace D3D11Framework
 
 	Window::Window(void) :
 		m_inputManager(nullptr),
-		m_hwnd(NULL),
+		m_hwnd(0),
 		m_isexit(false),
 		m_isresize(false),
 		m_active(true),
@@ -26,42 +26,50 @@ namespace D3D11Framework
 
 	bool Window::Create(const DescWindow &desc)
 	{
-		Log::Get()->Debug("Window::Create()", __FILEW__, __FUNCTIONW__, __LINE__);
+		Log::Get()->Debug("Window::Create()");
 
 		m_desc = desc;
 
-		WNDCLASSEXW wcd;
-		ZeroMemory(&wcd, sizeof(WNDCLASSEXW));
+		WNDCLASSEX wcd;
+		//ZeroMemory(&wcd, sizeof(WNDCLASSEXW));
 
 		wcd.cbSize = sizeof(WNDCLASSEXW);
 		wcd.style = CS_HREDRAW | CS_VREDRAW;
 		wcd.lpfnWndProc = StaticWndProc;
-		wcd.hInstance = NULL;
-		wcd.cbClsExtra = NULL;
-		wcd.cbWndExtra = NULL;
+		wcd.hInstance = 0;
+		wcd.cbClsExtra = 0;
+		wcd.cbWndExtra = 0;
 		wcd.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 		wcd.hIconSm = wcd.hIcon;
 		wcd.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wcd.hbrBackground = (HBRUSH)(COLOR_WINDOW);
 		wcd.lpszMenuName = NULL;
 		wcd.lpszClassName = L"D3D11F";
 
 		if (!RegisterClassEx(&wcd))
 		{
 			Log::Get()->Err("Didn't manage to register the window");
+			return false;
 		}
 
 
 		RECT rect = { 0, 0, m_desc.width, m_desc.height };
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW | WS_VISIBLE, FALSE);
 
-		m_hwnd = CreateWindowExW(NULL, 
+		long lwidth = rect.right - rect.left;
+		long lheight = rect.bottom - rect.top;
+
+		long lleft = (long)m_desc.posx;
+		long ltop = (long)m_desc.posy;
+
+		m_hwnd = CreateWindowEx(NULL, 
 								L"D3D11F",
 								m_desc.caption.c_str(),
 								WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-								static_cast<long>(m_desc.posx),
-								static_cast<long>(m_desc.posy),
-								rect.right - rect.left,
-								rect.top - rect.bottom,
+			lleft,
+			ltop,
+			lwidth,
+			lheight,
 								NULL,
 								NULL,
 								NULL,
@@ -69,12 +77,14 @@ namespace D3D11Framework
 
 		if (!m_hwnd)
 		{
-			Log::Get()->Err("Didn't manage to create the window", __FILEW__, __FUNCTIONW__, __LINE__);
+			Log::Get()->Err("Didn't manage to create the window");
 			return false;
 		}
 
 		ShowWindow(m_hwnd, SW_SHOW);
 		UpdateWindow(m_hwnd);
+
+		Log::Get()->Debug("Window::Create(): the window created successfully");
 
 		return true;
 	}
@@ -83,7 +93,7 @@ namespace D3D11Framework
 	{
 		MSG msg;
 
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -109,7 +119,7 @@ namespace D3D11Framework
 			m_isexit = true;
 			return 0;
 		case WM_ACTIVATE:
-			if (HIWORD(wParam) != WA_INACTIVE)
+			if (LOWORD(wParam) != WA_INACTIVE)
 				m_active = true;
 			else
 				m_active = false;
@@ -158,6 +168,7 @@ namespace D3D11Framework
 
 			return 0;
 
+		case WM_MOUSEMOVE: 
 		case WM_KEYDOWN: case WM_KEYUP:
 		case WM_LBUTTONDOWN: case WM_LBUTTONUP:
 		case WM_RBUTTONDOWN: case WM_RBUTTONUP:
@@ -173,6 +184,7 @@ namespace D3D11Framework
 
 	void Window::SetInputManager(InputManager* inputManager)
 	{
+		Log::Get()->Debug("Window::SetInputManager()");
 		m_inputManager = inputManager;
 		m_UpdateWindowState();
 	}

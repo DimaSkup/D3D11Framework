@@ -3,5 +3,5 @@
 #include "macros.h"
 #include "stdafx.h"
 #include "Framework.h"
-#include "InputManager.h"
+#include "InputListener.h"
 #include "Render.h"
