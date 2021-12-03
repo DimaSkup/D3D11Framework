@@ -1,6 +1,4 @@
-// the last revising was in 11.11.21
-
-#pragma once
+// the last revising was in 03.12.21
 
 #include "Window.h"
 #include "Render.h"
@@ -9,30 +7,25 @@
 
 namespace D3D11Framework
 {
-//-------------------------------------------------------------------
-
 	class Framework
 	{
 	public:
-		Framework(void);
-		~Framework(void);
+		Framework();
+		~Framework();
 
 		bool Init(void);
 		void Run(void);
 		void Close(void);
 
+		void AddInputListener(InputListener* listener);
 		void SetRender(Render* render);
-		void AddInputListener(InputListener* inputListener);
 
-	protected:
-		bool m_frame();		// handling of each the frame
+	private:
+		bool m_frame();			// handling of each frame
 
 		Window* m_wnd;
 		Render* m_render;
 		InputManager* m_input;
-		Log m_log;
-		bool m_init;		// if it has been initialized
+		bool m_init;			// is set to true if the framework was initialized
 	};
-
-//-------------------------------------------------------------------
 }

@@ -1,9 +1,11 @@
-// last revising at 29.11.21
+// last revising at 03.12.21
 
 #pragma once
 
 namespace D3D11Framework
 {
+// ------------------------------------------------------------------
+
 	class Render
 	{
 	public:
@@ -11,13 +13,13 @@ namespace D3D11Framework
 		virtual ~Render(void);
 
 		bool CreateDevice(HWND hWnd);
-		void BeginFrame();
-		void EndFrame();
-		void Shutdown();
+		void BeginFrame(void);
+		void EndFrame(void);
+		void Shutdown(void);
 
 		virtual bool Init(HWND hWnd) = 0;
 		virtual bool Draw(void) = 0;
-		virtual void Close(void) = 0;
+		virtual void Close() = 0;
 
 	protected:
 		D3D_DRIVER_TYPE m_driverType;
@@ -27,4 +29,6 @@ namespace D3D11Framework
 		IDXGISwapChain* m_pSwapChain;
 		ID3D11RenderTargetView* m_pRenderTargetView;
 	};
+
+// ------------------------------------------------------------------
 }

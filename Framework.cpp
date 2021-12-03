@@ -1,9 +1,9 @@
-// the last revising was in 11.11.21
+// the last revising was in 03.12.21
 
 #include "stdafx.h"
 #include "Framework.h"
-#include "macros.h"
 #include "Log.h"
+#include "macros.h"
 
 namespace D3D11Framework
 {
@@ -12,18 +12,19 @@ namespace D3D11Framework
 	// ---------------------
 	//   PUBLIC METHODS
 	// ---------------------
-	Framework::Framework(void) :
-		m_wnd(nullptr),
-		m_input(nullptr),
-		m_render(nullptr),
-		m_init(false)
+	Framework::Framework(void)
 	{
-		Log::Get()->Print("Framework::Framework(): calling of the constructor");
+		m_wnd = nullptr;
+		m_render = nullptr;
+		m_input = nullptr;
+		m_init = false;
+
+		Log::Get()->Debug("Framework::Framework(): calling of the constructor");
 	}
 
 	Framework::~Framework(void)
 	{
-		Log::Get()->Debug("Framework::Framework(): calling of the destructor");
+		Log::Get()->Debug("Framework::~Framework(): calling of the destructor");
 	}
 
 	void Framework::AddInputListener(InputListener* listener)
@@ -50,9 +51,7 @@ namespace D3D11Framework
 			return false;
 		}
 
-		m_input->Init();
-
-		// Set up the default values
+		// set the default settings
 		DescWindow desc;
 
 		if (!m_wnd->Create(desc))
@@ -61,11 +60,12 @@ namespace D3D11Framework
 			return false;
 		}
 
+		m_input->Init();
 		m_wnd->SetInputManager(m_input);
 
 		if (!m_render->CreateDevice(m_wnd->GetHWND()))
 		{
-			Log::Get()->Err("Framework::Init(): can't initialize the render");
+			Log::Get()->Err("Framework::Init(): can't create device");
 			return false;
 		}
 
@@ -85,34 +85,29 @@ namespace D3D11Framework
 
 		m_render->Shutdown();
 		_DELETE(m_render);
-		_CLOSE(m_input);
 		_CLOSE(m_wnd);
+		_CLOSE(m_input);
+		
 	}
 
-	
 
 	// ---------------------
 	//   PRIVATE METHODS
 	// ---------------------
-
 	bool Framework::m_frame(void)
 	{
-		// handle window events
+		// handle events from the window
 		m_wnd->RunEvent();
 
-		// if the window is inactive -- finish the frame
+		// if the window isn't active we stop the frame processing
 		if (!m_wnd->IsActive())
-		{
 			return true;
-		}
 
-		// if there is an exit -- finish the engine work
+		// if there is an exit we stop the framework working
 		if (m_wnd->IsExit())
-		{
 			return false;
-		}
 
-		// if the window changed its size 
+		// if the window changed its size
 		if (m_wnd->IsResize())
 		{
 
@@ -120,13 +115,12 @@ namespace D3D11Framework
 
 		m_render->BeginFrame();
 		if (!m_render->Draw())
-		{
 			return false;
-		}
 		m_render->EndFrame();
 
 		return true;
 	}
+
 
 //-------------------------------------------------------------------
 }
